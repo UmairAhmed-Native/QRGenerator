@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="albaraka_text_grey_dark">#595959</color>
+    <color name="albaraka_red">#d8373e</color>
+    <color name="albaraka_orange">#F6942C</color>
+    <color name="albaraka_temp_bg_grey">#CACACA</color>
+
+</resources>

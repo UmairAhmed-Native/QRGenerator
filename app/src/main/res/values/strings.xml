@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">QR Generator</string>
+    <string name="enter_iban">Enter IBAN</string>
+    <string name="generate_qr">Generate QR</string>
+    <string name="save">Save</string>
+    <string name="share">Share</string>
+</resources>
