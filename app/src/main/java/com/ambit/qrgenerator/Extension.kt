@@ -15,6 +15,7 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.ambit.qrgenerator.Constants.INITIAL_PERMS
@@ -82,12 +83,12 @@ fun ImageView.generateQRDrawable(data: QrData) = run {
                 dark = QrVectorColor
                     .RadialGradient(
                         colors = listOf(
-                            0f to ContextCompat.getColor(context, R.color.albaraka_red),
-                            1f to ContextCompat.getColor(context, R.color.albaraka_orange),
+                            0f to ContextCompat.getColor(context, R.color.black),
+                            1f to ContextCompat.getColor(context, R.color.black),
                         )
                     )
                 ball = QrVectorColor.Solid(
-                    ContextCompat.getColor(context, R.color.albaraka_red)
+                    ContextCompat.getColor(context, R.color.black)
                 )
             }
             shapes {
@@ -105,7 +106,7 @@ fun ImageView.generateQRDrawable(data: QrData) = run {
 }
 
 
-fun RelativeLayout.loadBitmapFromView(): Bitmap {
+fun ConstraintLayout.loadBitmapFromView(): Bitmap {
     setDrawingCacheEnabled(true)
     buildDrawingCache(true)
     setDrawingCacheEnabled(false)

@@ -4,4 +4,6 @@
     <string name="generate_qr">Generate QR</string>
     <string name="save">Save</string>
     <string name="share">Share</string>
+    <string name="iban">"IBAN : "</string>
+    <string name="entered_iban">%1$s %2$s</string>
 </resources>

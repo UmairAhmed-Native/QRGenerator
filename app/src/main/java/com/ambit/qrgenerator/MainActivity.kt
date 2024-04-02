@@ -124,6 +124,11 @@ class MainActivity : AppCompatActivity() {
                 qrString
             )
         )
+        binding.ibanTxt.text= getString(
+            R.string.entered_iban,
+            getString(R.string.iban),
+            binding.txtEdit.text?.trim().toString()
+        )
         binding.rrQrImage.visibility = View.VISIBLE
         binding.btnGenerate.visibility = View.GONE
         binding.btnSave.visibility = View.VISIBLE
