@@ -3,12 +3,17 @@ package com.ambit.qrgenerator
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.os.BuildCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import com.ambit.qrgenerator.data.remote.dto.QrGenerationRequest
@@ -36,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private var recentSavedReceipt: File? = null
     private lateinit var binding: ActivityMainBinding
     private var isSavedImage: Boolean = false;
-
+    private var isQrGenerated = false
     val qrGenerator: (String) -> QrData = { iban: String ->
         QrData.Url(iban)
 
@@ -61,8 +66,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         binding = DataBindingUtil.setContentView(
             this, R.layout.activity_main
@@ -77,14 +84,31 @@ class MainActivity : AppCompatActivity() {
         binding.txtEdit.doOnTextChanged { _, _, _, count ->
             binding.btnGenerate.apply {
                 isEnabled = count > 0
-                alpha = if (count > 0) 1.0f else 0.5f
+                alpha = if (count > 0) 1.0f else 0.8f
                 isClickable = count > 0
             }
         }
         binding.btnGenerate.setOnClickListener {
             generateQr()
         }
+        binding.backBtn.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+    }
 
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackPress()
+            }
+        }
+
+    private fun onBackPress() {
+        if (isQrGenerated) {
+            hideQr()
+        } else {
+            finish()
+        }
     }
 
 
@@ -98,8 +122,10 @@ class MainActivity : AppCompatActivity() {
                 call: Call<QrGenerationResponse>,
                 response: Response<QrGenerationResponse>
             ) {
+
                 if (response.isSuccessful) {
                     binding.progressDialog.visibility = View.GONE
+                    isQrGenerated = true
                     response.body()?.content?.let {
                         showQR(it)
                     }
@@ -124,7 +150,7 @@ class MainActivity : AppCompatActivity() {
                 qrString
             )
         )
-        binding.ibanTxt.text= getString(
+        binding.ibanTxt.text = getString(
             R.string.entered_iban,
             getString(R.string.iban),
             binding.txtEdit.text?.trim().toString()
@@ -139,6 +165,18 @@ class MainActivity : AppCompatActivity() {
         binding.btnSave.setOnClickListener {
             saveQrInGallery()
         }
+    }
+
+    private fun hideQr() {
+        binding.txtEdit.text?.clear()
+        binding.qrImage.setImageDrawable(null)
+        binding.ibanTxt.text = ""
+
+        binding.rrQrImage.visibility = View.GONE
+        binding.btnGenerate.visibility = View.VISIBLE
+        binding.btnSave.visibility = View.GONE
+        binding.btnShare.visibility = View.GONE
+        isQrGenerated = false
     }
 
     private fun shareQr() {
